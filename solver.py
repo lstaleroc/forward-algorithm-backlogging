@@ -36,14 +36,13 @@ def build_period_ec(index_i, index_j, min_total, matrix_data_in):
     sum_d = []
     for index in range(min_total):
         sum_d.insert(index, matrix_data_in[0][index + index_i])
-    r = 0
     if index_j == min_total - min_total:
         r = calculate_inf_limit(matrix_data_in, min_total, index_i, 0 + index_i)
     elif index_j == min_total - 1:
         r = calculate_sup_limit(matrix_data_in, min_total, 0 + index_i)
     else:
-        # TODO implement middle limit calculation (b/h)
-        pass
+        r = calculate_sup_limit(matrix_data_in, index_j + 1, 0 + index_i) + calculate_inf_limit(matrix_data_in, min_total - index_j, index_i + 1, 1 + index_i)
+        print(r)
     return k_j + (c_j * sum(sum_d)) + r
 
 
