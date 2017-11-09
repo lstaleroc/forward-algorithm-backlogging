@@ -4,6 +4,7 @@ Created on Tues Oct 31 22:15:16 2017
 
 @author: luis.talero
 """
+from pip._vendor.requests.packages.urllib3.connectionpool import xrange
 
 
 def calculate_min(index_i, index_j, matrix_data_in):
@@ -18,6 +19,9 @@ def calculate_min(index_i, index_j, matrix_data_in):
     min_list = []
     for index in range(min_total):
         min_list.insert(index, build_period_ec(index_i, index, min_total, matrix_data_in))
+    index_min = min(xrange(len(min_list)), key=min_list.__getitem__)
+    p_min_f = "Período mínimo en coordenada {} - {} = {}".format(str(index_i), str(index_j), index_min + 1)
+    print(p_min_f)
     return min(min_list)
 
 
@@ -41,8 +45,10 @@ def build_period_ec(index_i, index_j, min_total, matrix_data_in):
     elif index_j == min_total - 1:
         r = calculate_sup_limit(matrix_data_in, min_total, 0 + index_i)
     else:
-        r = calculate_sup_limit(matrix_data_in, index_j + 1, 0 + index_i) + calculate_inf_limit(matrix_data_in, min_total - index_j, index_i + 1, 1 + index_i)
-        print(r)
+        r = calculate_sup_limit(matrix_data_in, index_j + 1, 0 + index_i) + calculate_inf_limit(matrix_data_in,
+                                                                                                min_total - index_j,
+                                                                                                index_i + 1,
+                                                                                                current_index)
     return k_j + (c_j * sum(sum_d)) + r
 
 
@@ -64,7 +70,7 @@ def calculate_inf_limit(matrix_data_in, min_total, index_i, current_index):
                 continue
             sum_d.insert(index, matrix_data_in[0][index + index_i])
         inf_limit = matrix_data_in[1][current_index] * sum(sum_d)
-    return inf_limit + calculate_inf_limit(matrix_data_in, min_total - 1, index_i, current_index + 1)
+    return inf_limit + calculate_inf_limit(matrix_data_in, min_total - 1, index_i + 1, current_index + 1)
 
 
 def calculate_sup_limit(matrix_data_in, min_total, current_index):
@@ -107,12 +113,14 @@ def bt_solver(matrix_data_in):
     return bt
 
 
-matrix_in = [[2, 4, 1, 4],
-             [5, 1, 1, 2],
-             [20, 10, 15, 15],
-             [4, 6, 6, 5],
-             [2, 2, 2, 2]
-             ]
+matrix_in = [[10, 20, 40, 20, 30, 10],
+             [2, 2, 2, 2, 2, 2],
+             [100, 100, 150, 150, 150, 200],
+             [20, 20, 15, 15, 15, 15],
+             [5, 5, 5, 5, 5, 5],
+             [0, 0, 0, 0, 0, 0]]
 matrix_t = bt_solver(matrix_in)
-matrix_t.pop(4)
+print('*********************')
+print('*** Matriz salida ***')
+print('*********************')
 print(matrix_t)
